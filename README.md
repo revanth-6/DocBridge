@@ -601,3 +601,380 @@ CREATE TABLE chat_history (
     created_at TIMESTAMP DEFAULT NOW()
 );
 ```
+
+# API Endpoints
+
+---
+
+## Auth Service — `/api/auth`
+
+```text
+POST   /api/auth/register          Register new user
+POST   /api/auth/login             Login and get token
+GET    /api/auth/profile           Get user profile
+PUT    /api/auth/profile           Update user profile
+POST   /api/auth/family/add        Add family member
+GET    /api/auth/family            Get all family members
+PUT    /api/auth/family/:id        Update family member
+DELETE /api/auth/family/:id        Remove family member
+```
+
+---
+
+## Consultation Service — `/api/consultations`
+
+```text
+POST   /api/consultations          Add new consultation
+GET    /api/consultations          Get all consultations
+GET    /api/consultations/:id      Get single consultation
+PUT    /api/consultations/:id      Update consultation
+DELETE /api/consultations/:id      Delete consultation
+```
+
+---
+
+## Prescription Service — `/api/prescriptions`
+
+```text
+POST   /api/prescriptions                    Add prescription
+GET    /api/prescriptions/active             Get active medicines
+GET    /api/prescriptions/history            Get past medicines
+GET    /api/prescriptions/:id                Get single prescription
+PUT    /api/prescriptions/:id                Update prescription
+DELETE /api/prescriptions/:id                Delete prescription
+POST   /api/prescriptions/:id/sideeffect     Log side effect
+GET    /api/prescriptions/:id/sideeffects    Get side effects
+```
+
+---
+
+## Reminder Service — `/api/reminders`
+
+```text
+POST   /api/reminders/medicine              Create medicine reminder
+GET    /api/reminders/medicine/today        Get today's reminders
+PUT    /api/reminders/medicine/:id/taken    Mark as taken
+PUT    /api/reminders/medicine/:id/skip     Mark as skipped
+GET    /api/reminders/medicine/compliance   Get compliance stats
+POST   /api/reminders/followup              Create follow-up reminder
+GET    /api/reminders/followup              Get all follow-up reminders
+PUT    /api/reminders/followup/:id/done     Mark follow-up complete
+DELETE /api/reminders/followup/:id          Delete follow-up reminder
+```
+
+---
+
+## Lab Report Service — `/api/labreports`
+
+```text
+POST   /api/labreports              Add lab report entry
+GET    /api/labreports              Get all lab reports
+GET    /api/labreports/:id          Get single report
+DELETE /api/labreports/:id          Delete report
+POST   /api/labreports/explain      Get AI explanation for values
+GET    /api/labreports/trends/:name Get trend for a specific test
+```
+
+---
+
+## Symptom Tracker Service — `/api/symptoms`
+
+```text
+POST   /api/symptoms               Log a symptom
+GET    /api/symptoms               Get all symptoms
+GET    /api/symptoms/:id           Get single symptom
+DELETE /api/symptoms/:id           Delete symptom log
+GET    /api/symptoms/summary       Get symptom summary for doctor visit
+```
+
+---
+
+## AI Companion Service — `/api/ai`
+
+```text
+POST   /api/ai/chat                Send message to AI companion
+GET    /api/ai/chat/history        Get chat history
+DELETE /api/ai/chat/history        Clear chat history
+POST   /api/ai/questions           Generate questions for next visit
+```
+
+---
+
+## Health Summary Service — `/api/summary`
+
+```text
+GET    /api/summary                Get complete health summary
+GET    /api/summary/medicines      Get active medicines summary
+GET    /api/summary/reminders      Get today's reminders summary
+GET    /api/summary/labs           Get recent flagged lab values
+GET    /api/summary/symptoms       Get recent symptoms summary
+```
+
+---
+
+# Project Structure
+
+```text
+docbridge/
+│
+├── frontend/
+│   ├── public/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── Navbar.jsx
+│   │   │   ├── Dashboard.jsx
+│   │   │   ├── AIChat.jsx
+│   │   │   └── ...
+│   │   ├── pages/
+│   │   │   ├── Login.jsx
+│   │   │   ├── Register.jsx
+│   │   │   ├── Home.jsx
+│   │   │   ├── Consultations.jsx
+│   │   │   ├── Prescriptions.jsx
+│   │   │   ├── Reminders.jsx
+│   │   │   ├── LabReports.jsx
+│   │   │   ├── Symptoms.jsx
+│   │   │   └── AICompanion.jsx
+│   │   ├── services/
+│   │   │   └── api.js
+│   │   ├── App.jsx
+│   │   └── main.jsx
+│   ├── package.json
+│   └── Dockerfile
+│
+├── services/
+│   │
+│   ├── auth-service/
+│   │   ├── src/
+│   │   │   ├── routes/
+│   │   │   ├── controllers/
+│   │   │   ├── middleware/
+│   │   │   ├── models/
+│   │   │   └── index.js
+│   │   ├── package.json
+│   │   └── Dockerfile
+│   │
+│   ├── consultation-service/
+│   │   ├── src/
+│   │   │   ├── routes/
+│   │   │   ├── controllers/
+│   │   │   ├── models/
+│   │   │   └── index.js
+│   │   ├── package.json
+│   │   └── Dockerfile
+│   │
+│   ├── prescription-service/
+│   │   ├── src/
+│   │   │   ├── routes/
+│   │   │   ├── controllers/
+│   │   │   ├── models/
+│   │   │   └── index.js
+│   │   ├── package.json
+│   │   └── Dockerfile
+│   │
+│   ├── reminder-service/
+│   │   ├── src/
+│   │   │   ├── routes/
+│   │   │   ├── controllers/
+│   │   │   ├── models/
+│   │   │   └── index.js
+│   │   ├── package.json
+│   │   └── Dockerfile
+│   │
+│   ├── labreport-service/
+│   │   ├── src/
+│   │   │   ├── routes/
+│   │   │   ├── controllers/
+│   │   │   ├── models/
+│   │   │   └── index.js
+│   │   ├── package.json
+│   │   └── Dockerfile
+│   │
+│   ├── symptom-service/
+│   │   ├── src/
+│   │   │   ├── routes/
+│   │   │   ├── controllers/
+│   │   │   ├── models/
+│   │   │   └── index.js
+│   │   ├── package.json
+│   │   └── Dockerfile
+│   │
+│   ├── ai-companion-service/
+│   │   ├── src/
+│   │   │   ├── routes/
+│   │   │   ├── controllers/
+│   │   │   ├── models/
+│   │   │   └── index.js
+│   │   ├── package.json
+│   │   └── Dockerfile
+│   │
+│   └── health-summary-service/
+│       ├── src/
+│       │   ├── routes/
+│       │   ├── controllers/
+│       │   └── index.js
+│       ├── package.json
+│       └── Dockerfile
+│
+├── k8s/
+│   ├── auth-deployment.yaml
+│   ├── consultation-deployment.yaml
+│   ├── prescription-deployment.yaml
+│   ├── reminder-deployment.yaml
+│   ├── labreport-deployment.yaml
+│   ├── symptom-deployment.yaml
+│   ├── ai-companion-deployment.yaml
+│   ├── health-summary-deployment.yaml
+│   └── frontend-deployment.yaml
+│
+├── .github/
+│   └── workflows/
+│       └── deploy.yml
+│
+├── docker-compose.yml
+└── README.md
+```
+
+---
+
+# Getting Started
+
+## Prerequisites
+
+```text
+- Node.js v18+
+- Docker Desktop
+- PostgreSQL
+- Azure Account
+- Azure OpenAI Service access
+```
+
+---
+
+## Environment Variables
+
+Create a `.env` file in each service:
+
+```text
+# Auth Service
+PORT=3001
+DATABASE_URL=postgresql://user:password@localhost:5432/auth_db
+JWT_SECRET=your_jwt_secret
+
+# AI Companion Service
+PORT=3007
+DATABASE_URL=postgresql://user:password@localhost:5432/ai_db
+AZURE_OPENAI_ENDPOINT=your_azure_openai_endpoint
+AZURE_OPENAI_KEY=your_azure_openai_key
+AZURE_OPENAI_DEPLOYMENT=gpt-4
+
+# Reminder Service
+PORT=3004
+DATABASE_URL=postgresql://user:password@localhost:5432/reminder_db
+AZURE_NOTIFICATION_HUB_CONNECTION=your_connection_string
+```
+
+---
+
+# Running Locally with Docker Compose
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/docbridge.git
+
+# Navigate to project
+cd docbridge
+
+# Start all services
+docker-compose up --build
+
+# Frontend runs on http://localhost:3000
+# Services run on ports 3001-3008
+```
+
+---
+
+# Deployment
+
+## CI/CD Pipeline — GitHub Actions
+
+```text
+Developer pushes code to GitHub
+          ↓
+GitHub Actions workflow triggers
+          ↓
+Build Docker images for changed services
+          ↓
+Push images to Azure Container Registry
+          ↓
+Deploy updated images to AKS
+          ↓
+Application live on Azure
+```
+
+---
+
+## Azure Kubernetes Service Deployment
+
+```bash
+# Login to Azure
+az login
+
+# Connect to AKS cluster
+az aks get-credentials --resource-group docbridge-rg \
+                        --name docbridge-cluster
+
+# Apply Kubernetes manifests
+kubectl apply -f k8s/
+
+# Check deployment status
+kubectl get pods
+kubectl get services
+```
+
+---
+
+# Azure Services
+
+| Azure Service | Purpose in DocBridge |
+|---|---|
+| Azure Kubernetes Service | Host and orchestrate all microservices |
+| Azure Container Registry | Store Docker images for all services |
+| Azure OpenAI Service | Power AI Companion with GPT-4 |
+| Azure Database for PostgreSQL | Managed PostgreSQL per microservice |
+| Azure Notification Hubs | Medicine and follow-up push notifications |
+| Azure Blob Storage | Document and file storage |
+| Azure Key Vault | Secure storage of API keys and secrets |
+| Azure API Management | API Gateway for unified service entry |
+
+---
+
+# Future Roadmap
+
+| Phase | Features |
+|---|---|
+| Phase 1 — MVP | Core consultation logging, prescription management, AI companion, reminders |
+| Phase 2 | Lab report interpreter, symptom tracker, health summary dashboard |
+| Phase 3 | Family health profiles, multi-patient management |
+| Phase 4 | Regional language support — Hindi, Tamil, Telugu, Bengali |
+| Phase 5 | Doctor-facing version — send patient summary to doctor before visit |
+| Phase 6 | Integration with hospital systems and health records |
+| Phase 7 | Wearable device data integration |
+
+---
+
+# Key Differentiators
+
+| Feature | DocBridge | Generic AI (ChatGPT) | Health Apps |
+|---|---|---|---|
+| Knows YOUR medicines | ✅ | ❌ | ❌ |
+| Knows YOUR conditions | ✅ | ❌ | ❌ |
+| Knows YOUR allergies | ✅ | ❌ | ❌ |
+| Persistent health history | ✅ | ❌ | ✅ |
+| Medicine reminders | ✅ | ❌ | ✅ |
+| Post-consultation focus | ✅ | ❌ | ❌ |
+| Lab report interpretation | ✅ | ⚠️ Generic only | ❌ |
+| Smart question generation | ✅ | ⚠️ Generic only | ❌ |
+| Symptom-medicine correlation | ✅ | ❌ | ❌ |
+
+---
