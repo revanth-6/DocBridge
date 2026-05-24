@@ -440,3 +440,164 @@ Based on your current situation, here are the questions I would suggest bringing
 - How often should I check my blood sugar at home?
 - When should I schedule my next HbA1c test?
 - I logged dizziness twice this week — could this be related to my medicine?
+
+
+
+---
+
+## Database Schema
+
+### Auth Service
+
+```sql
+CREATE TABLE users (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(150) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    age INTEGER,
+    blood_group VARCHAR(10),
+    known_conditions TEXT[],
+    allergies TEXT[],
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE family_members (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES users(id),
+    name VARCHAR(100) NOT NULL,
+    relation VARCHAR(50) NOT NULL,
+    age INTEGER,
+    known_conditions TEXT[],
+    allergies TEXT[],
+    created_at TIMESTAMP DEFAULT NOW()
+);
+```
+
+
+### Consultation Service
+
+```sql
+CREATE TABLE consultations (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL,
+    doctor_name VARCHAR(100),
+    specialty VARCHAR(100),
+    hospital VARCHAR(150),
+    visit_date DATE NOT NULL,
+    diagnosis TEXT,
+    notes TEXT,
+    follow_up_date DATE,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+```
+
+
+### Prescription Service
+
+```sql
+CREATE TABLE prescriptions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL,
+    consultation_id UUID,
+    medicine_name VARCHAR(150) NOT NULL,
+    dosage VARCHAR(100),
+    frequency VARCHAR(100),
+    duration_days INTEGER,
+    instructions TEXT,
+    start_date DATE,
+    end_date DATE,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE side_effects_log (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    prescription_id UUID REFERENCES prescriptions(id),
+    user_id UUID NOT NULL,
+    effect_description TEXT NOT NULL,
+    severity VARCHAR(20),
+    logged_date DATE DEFAULT CURRENT_DATE,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+```
+
+
+### Reminder Service
+
+```sql
+CREATE TABLE medicine_reminders (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL,
+    prescription_id UUID NOT NULL,
+    medicine_name VARCHAR(150),
+    reminder_time TIME NOT NULL,
+    meal_instruction VARCHAR(50),
+    is_taken BOOLEAN DEFAULT FALSE,
+    is_skipped BOOLEAN DEFAULT FALSE,
+    reminder_date DATE NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE followup_reminders (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL,
+    reminder_title VARCHAR(200) NOT NULL,
+    reminder_description TEXT,
+    reminder_date DATE NOT NULL,
+    reminder_time TIME,
+    is_completed BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+```
+
+
+### Lab Report Service
+
+```sql
+CREATE TABLE lab_reports (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL,
+    test_name VARCHAR(150) NOT NULL,
+    value FLOAT NOT NULL,
+    unit VARCHAR(50),
+    normal_min FLOAT,
+    normal_max FLOAT,
+    lab_name VARCHAR(150),
+    test_date DATE NOT NULL,
+    ai_explanation TEXT,
+    is_flagged BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+```
+
+
+### Symptom Tracker Service
+
+```sql
+CREATE TABLE symptoms (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL,
+    symptom_name VARCHAR(150) NOT NULL,
+    description TEXT,
+    severity VARCHAR(20) NOT NULL,
+    possible_cause VARCHAR(100),
+    ai_assessment TEXT,
+    needs_doctor_attention BOOLEAN DEFAULT FALSE,
+    logged_date DATE DEFAULT CURRENT_DATE,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+```
+
+
+### AI Companion Service
+
+```sql
+CREATE TABLE chat_history (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL,
+    role VARCHAR(20) NOT NULL,
+    message TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+```
