@@ -11,7 +11,7 @@ const app = express();
 
 app.use(helmet());
 app.use(cors({ origin: env.CORS_ORIGIN, credentials: true }));
-app.use(express.json({ limit: '10mb' }));
+app.use(express.json({ limit: '100kb' }));
 app.use(hpp());
 app.use(morgan('combined', { stream: logger.stream }));
 
@@ -53,7 +53,6 @@ app.use((err, req, res, _next) => {
   res.status(err.statusCode || 500).json({
     success: false,
     message: env.NODE_ENV === 'production' ? 'An unexpected error occurred.' : err.message,
-    ...(env.NODE_ENV === 'development' && { stack: err.stack }),
     timestamp: new Date().toISOString(),
   });
 });

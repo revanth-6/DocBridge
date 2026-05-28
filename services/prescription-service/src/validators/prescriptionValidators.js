@@ -1,25 +1,26 @@
 const { z } = require('zod');
+const xss = require('xss');
 
 const createPrescriptionSchema = z.object({
   consultationId: z.string().uuid().optional().nullable(),
   familyMemberId: z.string().uuid().optional().nullable(),
-  medicineName: z.string().min(1, 'Medicine name is required').max(200),
-  genericName: z.string().max(200).optional(),
-  dosage: z.string().min(1, 'Dosage is required').max(100),
-  frequency: z.string().min(1, 'Frequency is required').max(100),
+  medicineName: z.string().min(1, 'Medicine name is required').max(200).transform(v => v ? xss(v) : v),
+  genericName: z.string().max(200).optional().transform(v => v ? xss(v) : v),
+  dosage: z.string().min(1, 'Dosage is required').max(100).transform(v => v ? xss(v) : v),
+  frequency: z.string().min(1, 'Frequency is required').max(100).transform(v => v ? xss(v) : v),
   durationDays: z.number().int().positive().optional(),
   startDate: z.string().min(1, 'Start date is required'),
   endDate: z.string().optional().nullable(),
-  instructions: z.string().optional(),
-  purpose: z.string().optional(),
-  purposeSimplified: z.string().optional(),
+  instructions: z.string().optional().transform(v => v ? xss(v) : v),
+  purpose: z.string().optional().transform(v => v ? xss(v) : v),
+  purposeSimplified: z.string().optional().transform(v => v ? xss(v) : v),
   isActive: z.boolean().optional(),
   refillNeeded: z.boolean().optional(),
   refillDate: z.string().optional().nullable(),
-  prescribingDoctor: z.string().max(200).optional(),
-  pharmacyNotes: z.string().optional(),
-  sideEffectWarnings: z.array(z.string()).optional(),
-  foodInteractions: z.array(z.string()).optional(),
+  prescribingDoctor: z.string().max(200).optional().transform(v => v ? xss(v) : v),
+  pharmacyNotes: z.string().optional().transform(v => v ? xss(v) : v),
+  sideEffectWarnings: z.array(z.string().transform(v => v ? xss(v) : v)).optional(),
+  foodInteractions: z.array(z.string().transform(v => v ? xss(v) : v)).optional(),
 });
 
 const updatePrescriptionSchema = createPrescriptionSchema.partial();

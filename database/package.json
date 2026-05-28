@@ -11,6 +11,7 @@
     "reset": "sequelize-cli db:migrate:undo:all && sequelize-cli db:migrate && sequelize-cli db:seed:all"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.3",
     "dotenv": "^17.4.2",
     "pg": "^8.11.5",
     "pg-hstore": "^2.3.4",

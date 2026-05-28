@@ -12,7 +12,7 @@ async function startServer() {
     initializeScheduler();
 
     const app = require('./app');
-    const server = app.listen(env.PORT, () => {
+    const server = app.listen(env.PORT, '127.0.0.1', () => {
       logger.info('============================================');
       logger.info('  DocBridge Reminder Service');
       logger.info(`  Port:        ${env.PORT}`);

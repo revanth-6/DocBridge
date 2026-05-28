@@ -23,7 +23,6 @@ function errorHandler(err, req, res, _next) {
     message: env.NODE_ENV === 'production'
       ? 'An unexpected error occurred. Please try again.'
       : err.message,
-    ...(env.NODE_ENV === 'development' && { stack: err.stack }),
     timestamp: new Date().toISOString(),
   });
 }

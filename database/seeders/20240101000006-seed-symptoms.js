@@ -12,7 +12,7 @@ module.exports = {
 
     await queryInterface.bulkInsert('symptoms', [
       {
-        id: 's1000000-0000-0000-0000-000000000001',
+        id: 'e3000000-0000-0000-0000-000000000001',
         user_id: userId,
         family_member_id: null,
         symptom_name: 'Headache',
@@ -33,7 +33,7 @@ module.exports = {
         updated_at: threeWeeksAgo,
       },
       {
-        id: 's1000000-0000-0000-0000-000000000002',
+        id: 'e3000000-0000-0000-0000-000000000002',
         user_id: userId,
         family_member_id: null,
         symptom_name: 'Ankle swelling',
@@ -54,7 +54,7 @@ module.exports = {
         updated_at: threeWeeksAgo,
       },
       {
-        id: 's1000000-0000-0000-0000-000000000003',
+        id: 'e3000000-0000-0000-0000-000000000003',
         user_id: userId,
         family_member_id: null,
         symptom_name: 'Mild dizziness',
@@ -75,7 +75,7 @@ module.exports = {
         updated_at: tenDaysAgo,
       },
       {
-        id: 's1000000-0000-0000-0000-000000000004',
+        id: 'e3000000-0000-0000-0000-000000000004',
         user_id: userId,
         family_member_id: null,
         symptom_name: 'Lower back pain',

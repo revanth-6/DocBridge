@@ -167,6 +167,54 @@ Import [docs/postman/DocBridge.postman_collection.json](docs/postman/DocBridge.p
 
 ---
 
+## Security & Production Hardening
+
+DocBridge has undergone a comprehensive production readiness assault and security hardening phase. Key security implementations include:
+- **XSS Protection**: Strict input sanitization across all endpoints to prevent Stored XSS.
+- **Payload Limits**: Gateway-level 100kb payload limits to mitigate memory exhaustion DoS attacks.
+- **Service Mesh Hardening**: All internal microservices are bound to `127.0.0.1`, ensuring they are strictly accessible only via the API Gateway.
+- **Idempotency & Race Conditions**: Enforced idempotency keys on sensitive operations and strict database-level referential integrity to prevent duplicate entries and orphaned records.
+- **Resilience**: The global dashboard (Health Summary Service) degrades gracefully, providing partial data even if individual microservices experience outages.
+
+---
+
+## Testing (Regression Suite)
+
+A robust regression test suite is built into the project to guarantee security, stability, integrity, and standard CRUD behaviors.
+
+To execute the regression test suite against a running local environment:
+```bash
+# Ensure PM2 cluster and Postgres are running
+npm run test:regression
+```
+The suite will test payload limits, missing/tampered JWTs, double deletions, rate-limiting isolation, and endpoint latencies.
+
+---
+
+## Azure Deployment
+
+The platform is designed to be deployed on Azure Kubernetes Service (AKS) with Managed PostgreSQL and Azure Cache for Redis.
+
+All deployment manifests and migration runbooks are located in the [`azure/`](./azure) folder:
+- **`docbridge-deployment.yml`**: Full Kubernetes manifest (Deployments, Services, Ingress, HorizontalPodAutoscalers).
+- **`redis-migration.md`**: Guide for migrating the in-memory API Gateway rate limiter to Azure Cache for Redis.
+- **`postgres-migration.md`**: Runbook for transitioning from local Docker PostgreSQL to Azure Database for PostgreSQL Flexible Server.
+- **`key-vault-setup.md`**: Guide for injecting secrets securely via Azure Key Vault CSI provider.
+
+---
+
+## CI/CD Pipeline
+
+The project utilizes GitHub Actions for Continuous Integration and Continuous Deployment.
+The workflow is defined in [`.github/workflows/ci.yml`](./.github/workflows/ci.yml).
+
+The pipeline automatically triggers on pushes to the `main` branch and pull requests. It performs:
+1. **Linting & Unit Testing**: Verifies code health and runs the regression suite in a headless environment.
+2. **Container Build & Push**: Builds Docker images for all 8 microservices and pushes them to Azure Container Registry (ACR).
+3. **Deployment**: Deploys the updated images to the Azure Kubernetes Service (AKS) cluster using rolling updates to ensure zero downtime.
+
+---
+
 ## License
 
 MIT

@@ -5,7 +5,7 @@ function createServiceProxy(routeConfig) {
   return createProxyMiddleware({
     target: routeConfig.target,
     changeOrigin: true,
-    pathRewrite: routeConfig.pathRewrite,
+    pathRewrite: (path) => routeConfig.path + (path === '/' ? '' : path),
     timeout: 30000,
     proxyTimeout: 30000,
     on: {
@@ -19,6 +19,8 @@ function createServiceProxy(routeConfig) {
         if (req.headers['x-user-role']) {
           proxyReq.setHeader('x-user-role', req.headers['x-user-role']);
         }
+        const { fixRequestBody } = require('http-proxy-middleware');
+        fixRequestBody(proxyReq, req);
         logger.debug(`Proxying ${req.method} ${req.originalUrl} → ${routeConfig.target}`);
       },
       proxyRes: (proxyRes, req) => {

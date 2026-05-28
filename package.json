@@ -1,0 +1,14 @@
+{
+  "name": "docbridge",
+  "version": "1.0.0",
+  "scripts": {
+    "test:regression": "node tests/regression/run-all.js",
+    "test:security": "node tests/regression/security.test.js",
+    "test:stability": "node tests/regression/stability.test.js",
+    "test:integrity": "node tests/regression/integrity.test.js",
+    "test:crud": "node tests/regression/crud.test.js"
+  },
+  "dependencies": {
+    "axios": "^1.6.8"
+  }
+}

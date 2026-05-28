@@ -17,6 +17,7 @@
     "http-proxy-middleware": "^3.0.0",
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
+    "node-cache": "^5.1.2",
     "winston": "^3.13.0"
   },
   "devDependencies": {

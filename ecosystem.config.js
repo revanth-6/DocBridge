@@ -3,9 +3,10 @@ module.exports = {
     {
       name: 'docbridge-gateway',
       script: 'src/server.js',
-      cwd: '/home/ubuntu/docbridge/gateway',
+      cwd: './gateway',
       instances: 1,
       autorestart: true,
+      exp_backoff_restart_delay: 100,
       watch: false,
       max_memory_restart: '500M',
       env: { NODE_ENV: 'production' }
@@ -13,9 +14,10 @@ module.exports = {
     {
       name: 'docbridge-auth',
       script: 'src/server.js',
-      cwd: '/home/ubuntu/docbridge/services/auth-service',
+      cwd: './services/auth-service',
       instances: 1,
       autorestart: true,
+      exp_backoff_restart_delay: 100,
       watch: false,
       max_memory_restart: '300M',
       env: { NODE_ENV: 'production' }
@@ -23,9 +25,10 @@ module.exports = {
     {
       name: 'docbridge-consultation',
       script: 'src/server.js',
-      cwd: '/home/ubuntu/docbridge/services/consultation-service',
+      cwd: './services/consultation-service',
       instances: 1,
       autorestart: true,
+      exp_backoff_restart_delay: 100,
       watch: false,
       max_memory_restart: '300M',
       env: { NODE_ENV: 'production' }
@@ -33,9 +36,10 @@ module.exports = {
     {
       name: 'docbridge-prescription',
       script: 'src/server.js',
-      cwd: '/home/ubuntu/docbridge/services/prescription-service',
+      cwd: './services/prescription-service',
       instances: 1,
       autorestart: true,
+      exp_backoff_restart_delay: 100,
       watch: false,
       max_memory_restart: '300M',
       env: { NODE_ENV: 'production' }
@@ -43,9 +47,10 @@ module.exports = {
     {
       name: 'docbridge-reminder',
       script: 'src/server.js',
-      cwd: '/home/ubuntu/docbridge/services/reminder-service',
+      cwd: './services/reminder-service',
       instances: 1,
       autorestart: true,
+      exp_backoff_restart_delay: 100,
       watch: false,
       max_memory_restart: '300M',
       env: { NODE_ENV: 'production' }
@@ -53,9 +58,10 @@ module.exports = {
     {
       name: 'docbridge-labreport',
       script: 'src/server.js',
-      cwd: '/home/ubuntu/docbridge/services/labreport-service',
+      cwd: './services/labreport-service',
       instances: 1,
       autorestart: true,
+      exp_backoff_restart_delay: 100,
       watch: false,
       max_memory_restart: '300M',
       env: { NODE_ENV: 'production' }
@@ -63,9 +69,10 @@ module.exports = {
     {
       name: 'docbridge-symptom',
       script: 'src/server.js',
-      cwd: '/home/ubuntu/docbridge/services/symptom-service',
+      cwd: './services/symptom-service',
       instances: 1,
       autorestart: true,
+      exp_backoff_restart_delay: 100,
       watch: false,
       max_memory_restart: '300M',
       env: { NODE_ENV: 'production' }
@@ -73,9 +80,10 @@ module.exports = {
     {
       name: 'docbridge-ai-companion',
       script: 'src/server.js',
-      cwd: '/home/ubuntu/docbridge/services/ai-companion-service',
+      cwd: './services/ai-companion-service',
       instances: 1,
       autorestart: true,
+      exp_backoff_restart_delay: 100,
       watch: false,
       max_memory_restart: '500M',
       env: { NODE_ENV: 'production' }
@@ -83,9 +91,10 @@ module.exports = {
     {
       name: 'docbridge-health-summary',
       script: 'src/server.js',
-      cwd: '/home/ubuntu/docbridge/services/health-summary-service',
+      cwd: './services/health-summary-service',
       instances: 1,
       autorestart: true,
+      exp_backoff_restart_delay: 100,
       watch: false,
       max_memory_restart: '300M',
       env: { NODE_ENV: 'production' }
@@ -93,9 +102,10 @@ module.exports = {
     {
       name: 'docbridge-family',
       script: 'src/server.js',
-      cwd: '/home/ubuntu/docbridge/services/family-service',
+      cwd: './services/family-service',
       instances: 1,
       autorestart: true,
+      exp_backoff_restart_delay: 100,
       watch: false,
       max_memory_restart: '300M',
       env: { NODE_ENV: 'production' }

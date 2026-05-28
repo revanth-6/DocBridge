@@ -10,7 +10,7 @@ module.exports = {
 
     await queryInterface.bulkInsert('lab_reports', [
       {
-        id: 'lr100000-0000-0000-0000-000000000001',
+        id: 'e2000000-0000-0000-0000-000000000001',
         user_id: userId,
         consultation_id: 'c1000000-0000-0000-0000-000000000001',
         family_member_id: null,
@@ -37,7 +37,7 @@ module.exports = {
         updated_at: sixWeeksAgo,
       },
       {
-        id: 'lr100000-0000-0000-0000-000000000002',
+        id: 'e2000000-0000-0000-0000-000000000002',
         user_id: userId,
         consultation_id: 'c1000000-0000-0000-0000-000000000002',
         family_member_id: null,

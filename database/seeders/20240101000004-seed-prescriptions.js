@@ -11,7 +11,7 @@ module.exports = {
 
     await queryInterface.bulkInsert('prescriptions', [
       {
-        id: 'p1000000-0000-0000-0000-000000000001',
+        id: 'e1000000-0000-0000-0000-000000000001',
         user_id: userId,
         consultation_id: 'c1000000-0000-0000-0000-000000000001',
         family_member_id: null,
@@ -37,7 +37,7 @@ module.exports = {
         updated_at: twoMonthsAgo,
       },
       {
-        id: 'p1000000-0000-0000-0000-000000000002',
+        id: 'e1000000-0000-0000-0000-000000000002',
         user_id: userId,
         consultation_id: 'c1000000-0000-0000-0000-000000000001',
         family_member_id: null,
@@ -63,7 +63,7 @@ module.exports = {
         updated_at: twoMonthsAgo,
       },
       {
-        id: 'p1000000-0000-0000-0000-000000000003',
+        id: 'e1000000-0000-0000-0000-000000000003',
         user_id: userId,
         consultation_id: 'c1000000-0000-0000-0000-000000000001',
         family_member_id: null,

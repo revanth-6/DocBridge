@@ -1,0 +1,100 @@
+name: DocBridge CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: Run Regression Suite
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Cache Node Modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      # Start backend dependencies via docker-compose (e.g. Postgres) for testing
+      - name: Start Services
+        run: docker-compose up -d postgres
+      
+      - name: Install Dependencies
+        run: |
+          npm install
+          cd gateway && npm install
+          cd ../services/auth-service && npm install
+          cd ../consultation-service && npm install
+          cd ../family-service && npm install
+          cd ../health-summary-service && npm install
+          cd ../labreport-service && npm install
+          cd ../prescription-service && npm install
+          cd ../reminder-service && npm install
+          cd ../symptom-service && npm install
+          cd ../ai-companion-service && npm install
+          cd ../..
+      
+      - name: Start Microservices
+        run: |
+          npm install -g pm2
+          pm2 start ecosystem.config.js
+          sleep 10 # Wait for services to be ready
+
+      - name: Run Regression Tests
+        run: npm run test:regression
+
+  build-and-push:
+    name: Build & Push Docker Images
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    strategy:
+      matrix:
+        service:
+          - { name: gateway, path: gateway }
+          - { name: auth-service, path: services/auth-service }
+          - { name: consultation-service, path: services/consultation-service }
+          - { name: family-service, path: services/family-service }
+          - { name: health-summary-service, path: services/health-summary-service }
+          - { name: labreport-service, path: services/labreport-service }
+          - { name: prescription-service, path: services/prescription-service }
+          - { name: reminder-service, path: services/reminder-service }
+          - { name: symptom-service, path: services/symptom-service }
+          - { name: ai-companion-service, path: services/ai-companion-service }
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to Azure Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: docbridge.azurecr.io
+          username: ${{ secrets.AZURE_REGISTRY_USERNAME }}
+          password: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
+
+      - name: Extract Short SHA
+        id: vars
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Build and Push Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./${{ matrix.service.path }}
+          push: true
+          tags: |
+            docbridge.azurecr.io/${{ matrix.service.name }}:latest
+            docbridge.azurecr.io/${{ matrix.service.name }}:${{ steps.vars.outputs.sha_short }}

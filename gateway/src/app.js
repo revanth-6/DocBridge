@@ -6,6 +6,7 @@ const authenticate = require('./middleware/authenticate');
 const { generalLimiter, authLimiter, aiLimiter } = require('./middleware/rateLimiter');
 const requestLogger = require('./middleware/requestLogger');
 const errorHandler = require('./middleware/errorHandler');
+const idempotency = require('./middleware/idempotency');
 const createServiceProxy = require('./proxy/serviceProxy');
 const routesConfig = require('./config/routes.config');
 const logger = require('./config/logger');
@@ -15,19 +16,23 @@ const app = express();
 // Security and parsing middleware
 app.use(helmet());
 app.use(configureCors());
+app.use(express.json({ limit: '100kb' }));
 app.use(hpp());
 app.use(requestLogger);
 app.use(generalLimiter);
+app.use(idempotency);
 
 // Health check — no auth required
 app.get('/health', (req, res) => {
   res.json({
     status: 'healthy',
     service: 'api-gateway',
-    version: '1.0.0',
     timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
   });
+});
+
+app.get('/test-error', (req, res) => {
+  throw new Error('This is a deliberate error for testing stack traces.');
 });
 
 // Auth rate limiter for login/register

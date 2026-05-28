@@ -67,11 +67,11 @@ export default function DashboardPage() {
             <h3 className="font-semibold text-white">Active Medications</h3>
             <Link to="/prescriptions" className="text-xs text-teal-400 hover:text-teal-300">View all →</Link>
           </div>
-          {(d.activeMedications || []).length === 0 ? (
+          {(!Array.isArray(d.activeMedications) || d.activeMedications.length === 0) ? (
             <p className="text-sm text-slate-500">No active medications</p>
           ) : (
             <div className="space-y-3">
-              {(d.activeMedications || []).slice(0, 4).map((med, i) => (
+              {d.activeMedications.slice(0, 4).map((med, i) => (
                 <div key={i} className="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
                   <div>
                     <p className="text-sm font-medium text-slate-200">{med.medicine_name}</p>
@@ -89,11 +89,11 @@ export default function DashboardPage() {
             <h3 className="font-semibold text-white">Upcoming Follow-ups</h3>
             <Link to="/reminders" className="text-xs text-teal-400 hover:text-teal-300">View all →</Link>
           </div>
-          {(d.upcomingFollowups || []).length === 0 ? (
+          {(!Array.isArray(d.upcomingFollowups) || d.upcomingFollowups.length === 0) ? (
             <p className="text-sm text-slate-500">No upcoming follow-ups</p>
           ) : (
             <div className="space-y-3">
-              {(d.upcomingFollowups || []).map((fu, i) => (
+              {d.upcomingFollowups.map((fu, i) => (
                 <div key={i} className="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
                   <div>
                     <p className="text-sm font-medium text-slate-200">{fu.title}</p>
@@ -112,11 +112,11 @@ export default function DashboardPage() {
           <h3 className="font-semibold text-white">Ongoing Symptoms</h3>
           <Link to="/symptoms" className="text-xs text-teal-400 hover:text-teal-300">View all →</Link>
         </div>
-        {(d.ongoingSymptoms || []).length === 0 ? (
+        {(!Array.isArray(d.ongoingSymptoms) || d.ongoingSymptoms.length === 0) ? (
           <p className="text-sm text-slate-500">No ongoing symptoms — great news! 🎉</p>
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {(d.ongoingSymptoms || []).map((s, i) => (
+            {d.ongoingSymptoms.map((s, i) => (
               <div key={i} className="bg-white/5 rounded-xl p-3 border border-white/5">
                 <div className="flex items-center justify-between mb-1">
                   <p className="text-sm font-medium text-slate-200">{s.symptom_name}</p>
