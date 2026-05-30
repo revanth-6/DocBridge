@@ -1,9 +1,11 @@
 const rateLimit = require('express-rate-limit');
 const logger = require('../config/logger');
 
+const isTest = process.env.NODE_ENV === 'test';
+
 const generalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 100,
+  max: isTest ? 1000 : 100,
   standardHeaders: true,
   legacyHeaders: false,
   handler: (req, res) => {
@@ -18,7 +20,7 @@ const generalLimiter = rateLimit({
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 10,
+  max: isTest ? 1000 : 10,
   standardHeaders: true,
   legacyHeaders: false,
   keyGenerator: (req) => req.ip,
@@ -34,7 +36,7 @@ const authLimiter = rateLimit({
 
 const aiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 20,
+  max: isTest ? 1000 : 20,
   standardHeaders: true,
   legacyHeaders: false,
   keyGenerator: (req) => req.headers['x-user-id'] || req.ip,

@@ -59,6 +59,9 @@ async function testPartialDegradation() {
     // Restore symptom service immediately
     execSync('npx pm2 start docbridge-symptom', { stdio: 'ignore' });
     
+    // Wait for the symptom service to bind and database connections to be established
+    await new Promise(r => setTimeout(r, 2000));
+    
     if (res.status === 200 && res.data.serviceStatus.symptoms === 'degraded') {
       return { name: 'Partial Degradation', passed: true };
     }
@@ -67,6 +70,7 @@ async function testPartialDegradation() {
   } catch (err) {
     // Restore symptom service just in case
     try { execSync('npx pm2 start docbridge-symptom', { stdio: 'ignore' }); } catch(e){}
+    await new Promise(r => setTimeout(r, 2000));
     return { name: 'Partial Degradation', passed: false, reason: err.message };
   }
 }

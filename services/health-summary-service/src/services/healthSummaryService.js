@@ -101,16 +101,42 @@ class HealthSummaryService {
       }
       healthScore = Math.max(healthScore, 20);
 
+      // Compact arrays to return only small requested fields (name/dosage/date/title only)
+      const activeMedicationsCompact = (activeMeds || []).map(p => ({
+        id: p.id,
+        medicine_name: p.medicine_name,
+        dosage: p.dosage
+      }));
+
+      const ongoingSymptomsCompact = (ongoingSymptoms || []).map(s => ({
+        id: s.id,
+        symptom_name: s.symptom_name,
+        severity: s.severity
+      }));
+
+      const upcomingFollowupsCompact = (upcomingFollowups || []).map(r => ({
+        id: r.id,
+        title: r.title,
+        reminder_date: r.reminder_date
+      }));
+
+      const recentLabReportsCompact = (recentLabReports || []).map(r => ({
+        id: r.id,
+        report_name: r.report_name,
+        status: r.status,
+        flagged_count: Array.isArray(r.flagged_values) ? r.flagged_values.length : 0
+      }));
+
       return {
         user: userRow || {},
         healthScore,
         consultations: consultationStats,
-        activeMedications: activeMeds,
-        activeMedicationCount: activeMeds.length,
-        ongoingSymptoms,
-        ongoingSymptomCount: ongoingSymptoms ? ongoingSymptoms.length : 0,
-        upcomingFollowups,
-        recentLabReports,
+        activeMedications: activeMedicationsCompact,
+        activeMedicationCount: activeMedicationsCompact.length,
+        ongoingSymptoms: ongoingSymptomsCompact,
+        ongoingSymptomCount: ongoingSymptomsCompact.length,
+        upcomingFollowups: upcomingFollowupsCompact,
+        recentLabReports: recentLabReportsCompact,
         activeReminderCount: parseInt(medReminderCount?.active_reminders || 0, 10),
         serviceStatus: {
           symptoms: symptomRes ? 'healthy' : 'degraded',

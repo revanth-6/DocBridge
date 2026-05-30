@@ -130,7 +130,7 @@ export default function DashboardPage() {
       </Card>
 
       <div className="text-center py-4">
-        <Link to="/ai-companion" className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-xl text-white font-semibold hover:from-teal-600 hover:to-cyan-600 transition-all shadow-lg shadow-teal-500/25">
+        <Link to="/ai" className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-xl text-white font-semibold hover:from-teal-600 hover:to-cyan-600 transition-all shadow-lg shadow-teal-500/25">
           🤖 Chat with AI Companion
         </Link>
       </div>

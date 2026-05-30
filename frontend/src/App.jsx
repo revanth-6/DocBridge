@@ -24,11 +24,11 @@ export default function App() {
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/consultations" element={<ConsultationsPage />} />
             <Route path="/prescriptions" element={<PrescriptionsPage />} />
-            <Route path="/lab-reports" element={<LabReportsPage />} />
+            <Route path="/labreports" element={<LabReportsPage />} />
             <Route path="/symptoms" element={<SymptomsPage />} />
             <Route path="/reminders" element={<RemindersPage />} />
             <Route path="/family" element={<FamilyPage />} />
-            <Route path="/ai-companion" element={<AICompanionPage />} />
+            <Route path="/ai" element={<AICompanionPage />} />
             <Route path="/profile" element={<ProfilePage />} />
           </Route>
           <Route path="*" element={<Navigate to="/dashboard" replace />} />

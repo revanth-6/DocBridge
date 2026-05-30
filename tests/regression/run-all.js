@@ -3,7 +3,20 @@ const stabilityTest = require('./stability.test.js');
 const integrityTest = require('./integrity.test.js');
 const crudTest = require('./crud.test.js');
 
+const { execSync } = require('child_process');
+
 async function runAll() {
+  console.log('--- SETTING UP TESTING ENVIRONMENT ---');
+  try {
+    execSync('npx pm2 restart docbridge-gateway --update-env', { 
+      env: { ...process.env, NODE_ENV: 'test' } 
+    });
+    console.log('docbridge-gateway restarted in test mode.');
+    await new Promise(r => setTimeout(r, 2500));
+  } catch (err) {
+    console.error('Failed to restart gateway in test mode:', err.message);
+  }
+
   console.log('--- RUNNING DOCBRIDGE REGRESSION SUITE ---');
   
   const suites = [
@@ -25,8 +38,8 @@ async function runAll() {
     totalPassed += res.passed;
     if (res.passed !== res.total) allPassed = false;
     
-    // Wait 1 second to ensure JWT 'iat' changes for the next login to avoid unique constraint error
-    await new Promise(r => setTimeout(r, 1000));
+    // Wait 1.5 seconds to ensure JWT 'iat' changes for next login to avoid unique constraints
+    await new Promise(r => setTimeout(r, 1500));
   }
 
   // Print results
@@ -56,6 +69,17 @@ async function runAll() {
   const totalResultPad = allPassed ? '✅ PASS ' : '❌ FAIL ';
   console.log(`║ ${totalNamePad} ║ ${totalTestPad} ║ ${totalResultPad}║`);
   console.log('╚══════════════════════════════════╩════════╩═════════╝');
+
+  console.log('\n--- RESTORING PRODUCTION ENVIRONMENT ---');
+  try {
+    execSync('npx pm2 restart docbridge-gateway --update-env', { 
+      env: { ...process.env, NODE_ENV: 'production' } 
+    });
+    console.log('docbridge-gateway restored to production mode.');
+    await new Promise(r => setTimeout(r, 2000));
+  } catch (err) {
+    console.error('Failed to restore gateway to production mode:', err.message);
+  }
 
   if (!allPassed) {
     process.exit(1);

@@ -5,8 +5,13 @@ const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
-    const stored = localStorage.getItem('user');
-    return stored ? JSON.parse(stored) : null;
+    try {
+      const stored = localStorage.getItem('user');
+      return stored ? JSON.parse(stored) : null;
+    } catch (e) {
+      console.error('Failed to parse user from localStorage:', e);
+      return null;
+    }
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -44,7 +49,11 @@ export function AuthProvider({ children }) {
         return data.data;
       }
     } catch (err) {
-      const msg = err.response?.data?.message || 'Login failed';
+      let msg = err.response?.data?.message || 'Login failed';
+      if (err.response?.data?.errors && Array.isArray(err.response.data.errors)) {
+        const details = err.response.data.errors.map(e => e.message || `${e.field}: ${e.message}`).join(', ');
+        msg = `${msg}: ${details}`;
+      }
       setError(msg);
       throw new Error(msg);
     }
@@ -62,7 +71,11 @@ export function AuthProvider({ children }) {
         return data.data;
       }
     } catch (err) {
-      const msg = err.response?.data?.message || 'Registration failed';
+      let msg = err.response?.data?.message || 'Registration failed';
+      if (err.response?.data?.errors && Array.isArray(err.response.data.errors)) {
+        const details = err.response.data.errors.map(e => e.message).join(', ');
+        msg = `${msg}: ${details}`;
+      }
       setError(msg);
       throw new Error(msg);
     }

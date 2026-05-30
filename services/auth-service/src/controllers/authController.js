@@ -7,8 +7,8 @@ async function register(req, res) {
     const result = await authService.register(req.validatedBody);
     return successResponse(res, result, 'Account created successfully! Welcome to DocBridge.', 201);
   } catch (error) {
-    logger.error('Registration error:', { message: error.message });
-    return errorResponse(res, error.message, error.statusCode || 500);
+    logger.error('Registration error:', { message: error.message, stack: error.stack, errors: error.errors });
+    return errorResponse(res, error.message, error.statusCode || 500, error.errors);
   }
 }
 
@@ -22,8 +22,8 @@ async function login(req, res) {
     const result = await authService.login(email, password, meta);
     return successResponse(res, result, 'Welcome back!');
   } catch (error) {
-    logger.error('Login error:', { message: error.message });
-    return errorResponse(res, error.message, error.statusCode || 500);
+    logger.error('Login error:', { message: error.message, stack: error.stack, errors: error.errors });
+    return errorResponse(res, error.message, error.statusCode || 500, error.errors);
   }
 }
 

@@ -109,22 +109,29 @@ class ConsultationService {
     const scheduled = await Consultation.count({ where: { user_id: userId, status: 'scheduled' } });
     const cancelled = await Consultation.count({ where: { user_id: userId, status: 'cancelled' } });
 
-    const recentConsultations = await Consultation.findAll({
+    const lastVisit = await Consultation.findOne({
       where: { user_id: userId },
+      attributes: ['consultation_date'],
       order: [['consultation_date', 'DESC']],
-      limit: 5,
     });
 
-    const upcomingFollowups = await Consultation.findAll({
+    const nextFollowUp = await Consultation.findOne({
       where: {
         user_id: userId,
         follow_up_date: { [Op.gte]: new Date() },
       },
+      attributes: ['follow_up_date'],
       order: [['follow_up_date', 'ASC']],
-      limit: 5,
     });
 
-    return { total, completed, scheduled, cancelled, recentConsultations, upcomingFollowups };
+    return {
+      total,
+      completed,
+      scheduled,
+      cancelled,
+      lastVisitDate: lastVisit ? lastVisit.consultation_date : null,
+      nextFollowUpDate: nextFollowUp ? nextFollowUp.follow_up_date : null,
+    };
   }
 }
 

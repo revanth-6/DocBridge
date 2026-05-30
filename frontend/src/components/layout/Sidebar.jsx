@@ -6,11 +6,11 @@ const navItems = [
   { path: '/dashboard', label: 'Dashboard', icon: '📊' },
   { path: '/consultations', label: 'Consultations', icon: '🩺' },
   { path: '/prescriptions', label: 'Prescriptions', icon: '💊' },
-  { path: '/lab-reports', label: 'Lab Reports', icon: '🔬' },
+  { path: '/labreports', label: 'Lab Reports', icon: '🔬' },
   { path: '/symptoms', label: 'Symptoms', icon: '📋' },
   { path: '/reminders', label: 'Reminders', icon: '⏰' },
   { path: '/family', label: 'Family', icon: '👨‍👩‍👧‍👦' },
-  { path: '/ai-companion', label: 'AI Companion', icon: '🤖' },
+  { path: '/ai', label: 'AI Companion', icon: '🤖' },
 ];
 
 export default function Sidebar({ isOpen, onClose }) {
