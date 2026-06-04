@@ -2,12 +2,12 @@ const env = require('./environment');
 const logger = require('./logger');
 
 async function callAzureOpenAI(messages, options = {}) {
-  const endpoint = env.AZURE_OPENAI_ENDPOINT;
+  const rawEndpoint = env.AZURE_OPENAI_ENDPOINT || '';
   const apiKey = env.AZURE_OPENAI_KEY;
   const deploymentName = env.AZURE_OPENAI_DEPLOYMENT_NAME;
-  const apiVersion = env.AZURE_OPENAI_API_VERSION;
+  const apiVersion = env.AZURE_OPENAI_API_VERSION || '2024-02-01';
 
-  if (!endpoint || !apiKey) {
+  if (!rawEndpoint || !apiKey) {
     logger.warn('Azure OpenAI credentials not configured. Returning fallback response.');
     return {
       content: 'I apologize, but I am not able to provide AI-powered responses right now because the AI service has not been configured yet. Please ask your administrator to set up the Azure OpenAI credentials.',
@@ -16,7 +16,9 @@ async function callAzureOpenAI(messages, options = {}) {
     };
   }
 
-  const url = `${endpoint.replace(/\/$/, '')}/openai/deployments/${deploymentName}/chat/completions?api-version=${apiVersion}`;
+  // Strip trailing slashes, /openai/v1, or /openai from the endpoint
+  const endpoint = rawEndpoint.replace(/\/$/, '').replace(/\/openai\/v1$/, '').replace(/\/openai$/, '');
+  const url = `${endpoint}/openai/deployments/${deploymentName}/chat/completions?api-version=${apiVersion}`;
 
   try {
     const response = await fetch(url, {
@@ -26,6 +28,7 @@ async function callAzureOpenAI(messages, options = {}) {
         'api-key': apiKey,
       },
       body: JSON.stringify({
+        model: deploymentName,
         messages,
         max_tokens: options.maxTokens || 1000,
         temperature: options.temperature || 0.7,

@@ -7,13 +7,13 @@ const { chatSchema, explainMedicineSchema, explainLabReportSchema, explainSympto
 
 router.use(authenticate);
 router.post('/chat', validate(chatSchema), c.chat);
-router.get('/history', c.getHistory);
-router.get('/history/:sessionId', c.getSessionHistory);
-router.delete('/history/:sessionId', c.deleteSession);
+router.get('/chat/history', c.getHistory);
+router.get('/chat/history/:sessionId', c.getSessionHistory);
+router.delete('/chat/history/:sessionId', c.deleteSession);
 router.post('/explain/medicine', validate(explainMedicineSchema), c.explainMedicine);
 router.post('/explain/lab-report', validate(explainLabReportSchema), c.explainLabReport);
 router.post('/explain/symptom', validate(explainSymptomSchema), c.explainSymptom);
-router.post('/generate-questions', c.generateQuestions);
+router.post('/questions', c.generateQuestions);
 router.get('/suggested-questions', c.getSuggestedQuestions);
 
 module.exports = router;

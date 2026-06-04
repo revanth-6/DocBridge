@@ -70,7 +70,7 @@ class LabReportService {
 
   async getFlagged(userId) {
     return LabReport.findAll({
-      where: { user_id: userId, flagged_values: { [Op.ne]: '[]' } },
+      where: { user_id: userId, flagged_values: { [Op.ne]: [] } },
       order: [['report_date', 'DESC']],
     });
   }

@@ -18,6 +18,24 @@ export default function AICompanionPage() {
     aiApi.getSuggestedQuestions()
       .then(res => setSuggested(res.data?.data || []))
       .catch((err) => console.error("Failed to load suggested questions:", err));
+
+    aiApi.getHistory()
+      .then(async (res) => {
+        const sessions = res.data?.data || [];
+        if (sessions.length > 0) {
+          const latestSessionId = sessions[0].session_id;
+          setSessionId(latestSessionId);
+          try {
+            const historyRes = await aiApi.getSessionHistory(latestSessionId);
+            if (historyRes.data?.success) {
+              setMessages(historyRes.data.data || []);
+            }
+          } catch (err) {
+            console.error("Failed to load session messages:", err);
+          }
+        }
+      })
+      .catch((err) => console.error("Failed to load chat history:", err));
   }, []);
 
   useEffect(() => {

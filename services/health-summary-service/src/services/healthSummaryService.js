@@ -81,7 +81,7 @@ class HealthSummaryService {
       //   { replacements: { userId } }
       // );
       const medReminderRes = await InternalApi.get('/reminders/medicine?is_active=true&limit=1', token);
-      let medReminderCount = { active_reminders: medReminderRes?.data?.pagination?.total || 0 };
+      let medReminderCount = { active_reminders: medReminderRes?.pagination?.total || 0 };
 
       // Health score calculation (simple heuristic)
       let healthScore = 80;
@@ -167,8 +167,8 @@ class HealthSummaryService {
       let totalSymptoms = 0;
       let symptomEvents = [];
       if (symptomRes.status === 'fulfilled' && symptomRes.value && symptomRes.value.data) {
-        totalSymptoms = symptomRes.value.data.pagination?.total || (Array.isArray(symptomRes.value.data.data) ? symptomRes.value.data.data.length : 0);
-        symptomEvents = (symptomRes.value.data.data || symptomRes.value.data).map(s => ({
+        totalSymptoms = symptomRes.value.pagination?.total || (Array.isArray(symptomRes.value.data) ? symptomRes.value.data.length : 0);
+        symptomEvents = symptomRes.value.data.map(s => ({
           id: s.id,
           type: 'symptom',
           event_date: s.onset_date,
@@ -182,8 +182,8 @@ class HealthSummaryService {
       let totalPrescriptions = 0;
       let prescriptionEvents = [];
       if (prescriptionRes.status === 'fulfilled' && prescriptionRes.value && prescriptionRes.value.data) {
-        totalPrescriptions = prescriptionRes.value.data.pagination?.total || (Array.isArray(prescriptionRes.value.data.data) ? prescriptionRes.value.data.data.length : 0);
-        prescriptionEvents = (prescriptionRes.value.data.data || prescriptionRes.value.data).map(p => ({
+        totalPrescriptions = prescriptionRes.value.pagination?.total || (Array.isArray(prescriptionRes.value.data) ? prescriptionRes.value.data.length : 0);
+        prescriptionEvents = prescriptionRes.value.data.map(p => ({
           id: p.id,
           type: 'prescription',
           event_date: p.start_date,
@@ -197,8 +197,8 @@ class HealthSummaryService {
       let totalLabReports = 0;
       let labReportEvents = [];
       if (labReportRes.status === 'fulfilled' && labReportRes.value && labReportRes.value.data) {
-        totalLabReports = labReportRes.value.data.pagination?.total || (Array.isArray(labReportRes.value.data.data) ? labReportRes.value.data.data.length : 0);
-        labReportEvents = (labReportRes.value.data.data || labReportRes.value.data).map(l => ({
+        totalLabReports = labReportRes.value.pagination?.total || (Array.isArray(labReportRes.value.data) ? labReportRes.value.data.length : 0);
+        labReportEvents = labReportRes.value.data.map(l => ({
           id: l.id,
           type: 'lab_report',
           event_date: l.report_date,
@@ -212,8 +212,8 @@ class HealthSummaryService {
       let totalConsultations = 0;
       let consultationEvents = [];
       if (consultationRes.status === 'fulfilled' && consultationRes.value && consultationRes.value.data) {
-        totalConsultations = consultationRes.value.data.pagination?.total || (Array.isArray(consultationRes.value.data.data) ? consultationRes.value.data.data.length : 0);
-        consultationEvents = (consultationRes.value.data.data || consultationRes.value.data).map(c => ({
+        totalConsultations = consultationRes.value.pagination?.total || (Array.isArray(consultationRes.value.data) ? consultationRes.value.data.length : 0);
+        consultationEvents = consultationRes.value.data.map(c => ({
           id: c.id,
           type: 'consultation',
           event_date: c.consultation_date,

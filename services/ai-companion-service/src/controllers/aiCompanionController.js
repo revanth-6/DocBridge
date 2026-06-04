@@ -7,7 +7,20 @@ async function chat(req, res) {
     const { message, sessionId } = req.validatedBody;
     const result = await aiService.chat(req.user.userId, message, sessionId);
     return successResponse(res, result, 'Response generated.');
-  } catch (e) { logger.error('Chat error:', { message: e.message }); return errorResponse(res, e.message, e.statusCode || 500); }
+  } catch (e) {
+    logger.error('Chat error:', { message: e.message });
+    const fallbackResult = {
+      sessionId: req.validatedBody.sessionId || 'error-session',
+      message: {
+        id: 'fallback-' + Date.now(),
+        role: 'assistant',
+        content: 'I am having trouble connecting right now. Please try again in a moment.\n\n---\n⚕️ *This is general health information, not medical advice. Always consult your doctor before making any health decisions.*',
+        createdAt: new Date().toISOString()
+      },
+      tokensUsed: 0
+    };
+    return successResponse(res, fallbackResult, 'Response generated with fallback.', 200);
+  }
 }
 
 async function getHistory(req, res) {

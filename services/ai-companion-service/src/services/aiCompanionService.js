@@ -9,18 +9,18 @@ class AICompanionService {
   async chat(userId, message, sessionId = null) {
     const activeSessionId = sessionId || uuidv4();
 
-    // Save user message
-    await ChatHistory.create({
-      user_id: userId, session_id: activeSessionId,
-      role: 'user', content: message,
-    });
-
     // Build context
     const healthContext = await buildUserContext(userId);
     const chatHistory = await ChatHistory.findAll({
       where: { user_id: userId, session_id: activeSessionId },
       order: [['created_at', 'ASC']], limit: 20,
       attributes: ['role', 'content'],
+    });
+
+    // Save user message
+    await ChatHistory.create({
+      user_id: userId, session_id: activeSessionId,
+      role: 'user', content: message,
     });
 
     const messages = promptEngine.buildChatPrompt(message, {

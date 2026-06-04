@@ -19,7 +19,12 @@ export default function ProfilePage() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      await updateProfile(form);
+      const payload = {
+        ...form,
+        heightCm: form.heightCm === '' ? null : parseFloat(form.heightCm),
+        weightKg: form.weightKg === '' ? null : parseFloat(form.weightKg),
+      };
+      await updateProfile(payload);
       setEditing(false);
     } catch (err) { /* handle */ }
     finally { setSaving(false); }

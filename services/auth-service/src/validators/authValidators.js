@@ -39,8 +39,14 @@ const profileUpdateSchema = z.object({
   gender: z.enum(['male', 'female', 'other', 'prefer_not_to_say']).optional(),
   phone: z.string().optional(),
   bloodGroup: z.string().max(10).optional(),
-  heightCm: z.number().positive().optional(),
-  weightKg: z.number().positive().optional(),
+  heightCm: z.preprocess(
+    (val) => (val === '' || val === null || val === undefined) ? undefined : Number(val),
+    z.number().positive().optional()
+  ),
+  weightKg: z.preprocess(
+    (val) => (val === '' || val === null || val === undefined) ? undefined : Number(val),
+    z.number().positive().optional()
+  ),
   knownAllergies: z.array(z.string()).optional(),
   chronicConditions: z.array(z.string()).optional(),
   emergencyContactName: z.string().max(200).optional(),

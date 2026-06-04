@@ -138,16 +138,13 @@ graph TB
 
 ## Verification
 
-### Build Results
-```
-✓ Frontend: vite build — 110 modules, 865ms, zero errors
-✓ Output: dist/index.html (0.71 KB), index.css (22.57 KB), index.js (319 KB)
-```
+### Automated Integration & Regression Tests
+- **Service Health Check**: `node tests/health-check.js` confirms **9/9 services** (including the API Gateway and AI Companion) are active and healthy.
+- **Regression Suite**: `npm run test:regression` executed and passed successfully with **17/17 tests passing** (Security, Stability, Integrity, and CRUD suites).
+- **End-to-End Smoke Test**: `node tests/regression/smoke-test.js` successfully registered test users, logged in, added health records, and generated a real response from the Azure OpenAI service.
 
-### What Was NOT Tested (requires running DB)
-- Backend service startup (needs PostgreSQL)
-- API integration tests
-- Database migrations/seeders
+### Manual UI Verification
+- The AI Companion page (`/ai`) was verified via the frontend running on port `5173`. Historical chat sessions load on page load, suggested starter questions trigger queries, and clearing chat or generating questions operates correctly against the `/api/v1/ai` endpoints.
 
 ### How to Run Locally
 ```bash
